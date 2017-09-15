@@ -2,26 +2,25 @@ const winston = require('winston');
 const moment = require('moment');
 
 if (process.argv.length !== 3) {
-    winston.error('Bad argument. Example: node dian 20170608');
+    console.log('Bad argument. Example: node dian 20170608');
     return;
 }
 
 const arg = process.argv[2];
 if (!arg) {
-    winston.error('missing argument');
+    console.log('missing argument');
     return;
 }
 
 const mdate = moment(arg, 'YYYY-MM-DD');
 if (!mdate.isValid()) {
-    winston.error('invalid argument');
+    console.log('invalid argument');
     return;
 }
 
 const startDate = mdate.format('YYYY-MM-DD');
 const endDate = mdate.add(1, 'day').format('YYYY-MM-DD');
 winston.info(startDate);
-return;
 
 const soap = require('soap');
 const parseString = require('xml2js').parseString;
@@ -60,22 +59,17 @@ var pool80 = new sql.ConnectionPool(config80, err => {
             }
             let x = result.GetDetailData5ByPageResult;
             x = '<root>' + x + '</root>'
-            console.log(x);
-/*
             pool80.request()
-            .input('req', startDate)
-            .input('res', x)
-            .query(sqlstr, (err, result) => {
-                if (err) {
-                    winston.error('db80 request error', err);
-                    return;
-                }
+                .input('req', startDate)
+                .input('res', x)
+                .query(sqlstr, (err, result) => {
+                    if (err) {
+                        winston.error('insert into db80 failed', err);
+                        return;
+                    }
+                    winston.info('insert into db80 ok');
+                    pool80.close();
             });
-            console.log(x);
-            parseString(x, {explicitArray: false}, function(err, result1) {
-                console.log(util.inspect(result1, false, null))
-            });
-*/
         });
     });
 })
