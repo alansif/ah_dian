@@ -69,7 +69,7 @@ function workload() {
 	});
 }
 
-const cronstr = '0 23 22 * * *';
+const cronstr = '0 0 12 * * *';
 
 var job = new cron({
 	cronTime: cronstr,
